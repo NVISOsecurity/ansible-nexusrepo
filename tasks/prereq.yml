@@ -1,0 +1,11 @@
+---
+- name: Install prerequisite packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apt-transport-https
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    - python3-pip

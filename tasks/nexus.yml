@@ -1,0 +1,12 @@
+- name: Create a docker volume
+  docker_volume:
+    name: nexus-data
+
+- name: start nexus container
+  docker_container:
+    name: nexus
+    image: sonatype/nexus3
+    ports:
+    - "8081:8081"
+    volumes:
+    - nexus-data:/nexus-data
