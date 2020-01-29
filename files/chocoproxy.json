@@ -1,0 +1,5 @@
+{
+    "name": "chocoproxy",
+    "type": "groovy",
+    "content": "repository.createNugetProxy('chocoproxy','https://chocolatey.org/api/v2/')"
+}

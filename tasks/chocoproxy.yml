@@ -1,0 +1,48 @@
+- name: get admin password
+  command: "cat /var/lib/docker/volumes/nexus-data/_data/admin.password"
+  register: key
+  retries: 20
+  delay: 20
+  until: key is success
+
+- name: set admin_password
+  set_fact:
+    admin_password: "{{ key.stdout }}"
+
+- name: get Nexus repositories
+  uri:
+    url: "http://localhost:8081/service/rest/v1/repositories"
+    user: 'admin'
+    password: "{{ admin_password }}"
+    method: GET
+    force_basic_auth: yes
+  register: repositories
+  retries: 20
+  delay: 20
+  until: repositories is success
+
+- name: Create chocoproxy script
+  uri: 
+    url: "http://localhost:8081/service/rest/v1/script"
+    user: 'admin'
+    password: "{{ admin_password }}"
+    headers:
+      Content-Type: "application/json"
+    body: "{{ lookup('file','files/chocoproxy.json') }}"
+    body_format: json
+    method: POST
+    force_basic_auth: yes
+    status_code: 200,204
+  when: ('chocoproxy' not in repositories.json | string)
+
+- name: create chocoproxy
+  uri:
+    url: "http://localhost:8081/service/rest/v1/script/chocoproxy/run"
+    user: 'admin'
+    password: "{{ admin_password }}"
+    headers:
+      Content-Type: "text/plain"
+    method: POST
+    force_basic_auth: yes
+    status_code: 200,204
+  when: ('chocoproxy' not in repositories.json | string)

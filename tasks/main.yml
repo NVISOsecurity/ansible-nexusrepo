@@ -3,3 +3,5 @@
 - include: docker.yml
 
 - include: nexus.yml
+
+- include: chocoproxy.yml
