@@ -2,6 +2,7 @@
 - name: Install prerequisite packages
   apt:
     name: "{{ packages }}"
+    update_cache: yes
   vars:
     packages:
     - apt-transport-https
